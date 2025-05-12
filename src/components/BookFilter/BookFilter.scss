@@ -1,0 +1,62 @@
+.book-filter {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h3 {
+        font-size: 1.2rem;
+        color: #333;
+        margin: 0 0 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .filter-section {
+        margin-bottom: 1.5rem;
+
+        h4 {
+            font-size: 1rem;
+            color: #666;
+            margin: 0 0 0.5rem;
+        }
+
+        :global {
+            .MuiSlider-root {
+                color: #ff4444;
+            }
+
+            .MuiSlider-thumb {
+                &:hover, &.Mui-focusVisible {
+                    box-shadow: 0 0 0 8px rgba(255, 68, 68, 0.16);
+                }
+            }
+
+            .MuiSlider-track {
+                border: none;
+            }
+
+            .MuiSlider-rail {
+                opacity: 0.5;
+            }
+
+            .MuiRating-root {
+                color: #ffc107;
+            }
+
+            .MuiSelect-select {
+                padding: 0.5rem;
+            }
+
+            .MuiOutlinedInput-root {
+                &:hover .MuiOutlinedInput-notchedOutline {
+                    border-color: #ff4444;
+                }
+
+                &.Mui-focused .MuiOutlinedInput-notchedOutline {
+                    border-color: #ff4444;
+                }
+            }
+        }
+    }
+} 

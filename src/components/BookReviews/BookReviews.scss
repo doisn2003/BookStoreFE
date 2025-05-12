@@ -1,0 +1,115 @@
+.book-reviews {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .reviews-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+
+        h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin: 0;
+        }
+
+        .average-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            span {
+                color: #666;
+            }
+        }
+    }
+
+    .review-form {
+        background: #f9f9f9;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+
+        h4 {
+            font-size: 1.2rem;
+            color: #333;
+            margin: 0 0 1rem;
+        }
+
+        .rating-input {
+            margin-bottom: 1rem;
+        }
+
+        :global {
+            .MuiTextField-root {
+                margin-bottom: 1rem;
+            }
+
+            .MuiButton-root {
+                background: #ff4444;
+                text-transform: none;
+                font-size: 1rem;
+                padding: 0.5rem 2rem;
+
+                &:hover {
+                    background: #ff2222;
+                }
+
+                &:disabled {
+                    background: #ccc;
+                }
+            }
+        }
+    }
+
+    .reviews-list {
+        .review-item {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #eee;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            .review-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 1rem;
+
+                .reviewer-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+
+                    :global {
+                        .MuiAvatar-root {
+                            width: 40px;
+                            height: 40px;
+                        }
+                    }
+
+                    h4 {
+                        font-size: 1rem;
+                        color: #333;
+                        margin: 0 0 0.25rem;
+                    }
+
+                    .review-date {
+                        font-size: 0.9rem;
+                        color: #999;
+                    }
+                }
+            }
+
+            .review-comment {
+                color: #666;
+                line-height: 1.6;
+                margin: 0;
+            }
+        }
+    }
+} 
