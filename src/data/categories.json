@@ -1,0 +1,50 @@
+[
+    {
+        "id": "1",
+        "name": "Fiction",
+        "description": "Works of fiction including novels, short stories, and novellas",
+        "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500"
+    },
+    {
+        "id": "2",
+        "name": "Non-Fiction",
+        "description": "Factual works including biographies, history, and science",
+        "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500"
+    },
+    {
+        "id": "3",
+        "name": "Science Fiction",
+        "description": "Futuristic and speculative fiction exploring scientific concepts",
+        "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500"
+    },
+    {
+        "id": "4",
+        "name": "Biography",
+        "description": "Life stories and memoirs of notable individuals",
+        "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500"
+    },
+    {
+        "id": "5",
+        "name": "Fantasy",
+        "description": "Imaginative fiction featuring magical and supernatural elements",
+        "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500"
+    },
+    {
+        "id": "6",
+        "name": "Historical Fiction",
+        "description": "Fictional stories set in historical periods",
+        "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500"
+    },
+    {
+        "id": "7",
+        "name": "Horror",
+        "description": "Fiction intended to scare, frighten, or startle",
+        "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500"
+    },
+    {
+        "id": "8",
+        "name": "Philosophical Fiction",
+        "description": "Fiction exploring philosophical themes and ideas",
+        "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500"
+    }
+] 
