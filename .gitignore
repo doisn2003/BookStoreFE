@@ -36,4 +36,11 @@ yarn-error.log*
 .Spotlight-V100
 .Trashes
 ehthumbs.db
-Thumbs.db 
+Thumbs.db
+
+# MongoDB data
+data/db/
+*.wt
+*.lock
+*.turtle
+diagnostic.data/ 
