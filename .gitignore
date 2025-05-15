@@ -85,4 +85,7 @@ data/db/
 *.wt
 *.lock
 *.turtle
-diagnostic.data/ 
+diagnostic.data/
+
+# Backend repository
+bookStoreBE/ 
