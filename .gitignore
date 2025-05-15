@@ -86,6 +86,3 @@ data/db/
 *.lock
 *.turtle
 diagnostic.data/
-
-# Backend repository
-bookStoreBE/ 
