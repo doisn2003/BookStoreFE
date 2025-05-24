@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Rating } from '@mui/material';
 import './BookCard.scss';
+import api from '@/services/api';
+import { API_ENDPOINTS } from '@/constants';
 
 interface BookCardProps {
     id: string;
@@ -30,10 +32,23 @@ const BookCard: React.FC<BookCardProps> = ({
         navigate(`/book/${id}`);
     };
 
-    const handleAddToCart = (e: React.MouseEvent) => {
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleAddToCart = async (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (onAddToCart) {
-            onAddToCart(id);
+        try {
+            setIsAddingToCart(true);
+            setError('');
+            await api.post(API_ENDPOINTS.CART.ADD, { bookId: id, quantity: 1 });
+            if (onAddToCart) {
+                onAddToCart(id);
+            }
+        } catch (err: any) {
+            console.error('Error adding to cart:', err);
+            setError(err.response?.data?.message || 'Error adding to cart');
+        } finally {
+            setIsAddingToCart(false);
         }
     };
 
@@ -66,12 +81,16 @@ const BookCard: React.FC<BookCardProps> = ({
                         <span className="current-price">${price.toFixed(2)}</span>
                     )}
                 </div>
-                <button className="add-to-cart" onClick={handleAddToCart}>
-                    Add to Cart
+                <button 
+                    className={`add-to-cart ${isAddingToCart ? 'loading' : ''} ${error ? 'error' : ''}`} 
+                    onClick={handleAddToCart}
+                    disabled={isAddingToCart}
+                >
+                    {isAddingToCart ? 'Adding...' : error ? 'Failed' : 'Add to Cart'}
                 </button>
             </div>
         </div>
     );
 };
 
-export default BookCard; 
+export default BookCard;

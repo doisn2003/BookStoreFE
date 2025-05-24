@@ -11,6 +11,9 @@ import bestSellers from '@/data/bestSellers.json';
 import newReleases from '@/data/newReleases.json';
 import mockReviews from '@/data/mockReviews.json';
 import categories from '@/data/categories.json';
+import api from '@/services/api';
+import axios from 'axios';
+import { API_ENDPOINTS } from '@/constants';
 
 interface Book {
     id: string;
@@ -70,20 +73,105 @@ const BookDetail: React.FC = () => {
         }
     }, [id]);
 
-    const handleAddToCart = () => {
-        setSnackbar({
-            open: true,
-            message: `${quantity} ${quantity === 1 ? 'copy' : 'copies'} of "${book?.title}" added to cart`,
-            severity: 'success'
-        });
+    interface ApiError {
+        response?: {
+            data?: {
+                message?: string;
+            };
+        };
+        message: string;
+    }
+
+    const handleAddToCart = async () => {
+        try {
+            // Add debug logging to see what's happening
+            console.log('Adding to cart with data:', { bookId: id, quantity });
+            
+            // Check if API_ENDPOINTS.CART.ADD has the correct path
+            console.log('Using endpoint:', API_ENDPOINTS.CART.ADD);
+            
+            // Make sure we're using the correct property name 'bookId'
+            // The server expects a bookId parameter as seen in cart.routes.ts
+            const response = await api.post(API_ENDPOINTS.CART.ADD, {
+                bookId: id,
+                quantity: quantity
+            });
+            
+            console.log('Cart response:', response);
+            
+            setSnackbar({
+                open: true,
+                message: `${quantity} ${quantity === 1 ? 'copy' : 'copies'} of "${book?.title}" added to cart`,
+                severity: 'success'
+            });
+        } catch (err: any) {
+            const error = err as ApiError;
+            // More detailed error logging
+            console.error('Error adding to cart:', error);
+            console.error('Error response data:', error.response?.data);
+            
+            const errorMessage = error.response?.data?.message || 'Error adding to cart';
+            setSnackbar({
+                open: true,
+                message: errorMessage,
+                severity: 'error'
+            });
+        }
     };
 
-    const handleAddToWishlist = () => {
-        setSnackbar({
-            open: true,
-            message: `"${book?.title}" added to wishlist`,
-            severity: 'success'
-        });
+    const handleAddToWishlist = async () => {
+        try {
+            // Add debug logging to see what's happening
+            console.log('Adding to Wishlist with data:', { bookId: id, quantity });
+            
+            // Check if API_ENDPOINTS.CART.ADD has the correct path
+            console.log('Using endpoint:', API_ENDPOINTS.WISHLIST.ADD);
+            
+            // Make sure we're using the correct property name 'bookId'
+            // The server expects a bookId parameter as seen in cart.routes.ts
+            const response = await api.post(API_ENDPOINTS.WISHLIST.ADD, {
+                bookId: id,
+                quantity: quantity
+            });
+            
+            console.log('Wishlist response:', response);
+            
+            setSnackbar({
+                open: true,
+                message: `${quantity} ${quantity === 1 ? 'copy' : 'copies'} of "${book?.title}" added to cart`,
+                severity: 'success'
+            });
+        } catch (err: any) {
+            const error = err as ApiError;
+            // More detailed error logging
+            console.error('Error adding to wishlist:', error);
+            console.error('Error response data:', error.response?.data);
+            
+            const errorMessage = error.response?.data?.message || 'Error adding to wishlist';
+            setSnackbar({
+                open: true,
+                message: errorMessage,
+                severity: 'error'
+            });
+        }
+    };
+
+    const handleAddToWishlist2 = async () => {
+        try {
+            await axios.post(API_ENDPOINTS.WISHLIST.ADD(book.id));
+            setSnackbar({
+                open: true,
+                message: `"${book?.title}" added to wishlist`,
+                severity: 'success'
+            });
+        } catch (error) {
+            console.error('Error adding to wishlist:', error);
+            setSnackbar({
+                open: true,
+                message: 'Failed to add to wishlist',
+                severity: 'error'
+            });
+        }
     };
 
     const handleQuantityChange = (newQuantity: number) => {
@@ -268,4 +356,4 @@ const BookDetail: React.FC = () => {
     );
 };
 
-export default BookDetail; 
+export default BookDetail;

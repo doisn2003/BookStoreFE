@@ -19,9 +19,15 @@ export const API_ENDPOINTS = {
     REMOVE: '/cart/remove',
   },
   ORDERS: {
-    LIST: '/orders',
+    LIST: '/orders/my-orders',
     CREATE: '/orders',
     DETAIL: (id: string) => `/orders/${id}`,
+  },
+  WISHLIST: {
+    GET: '/wishlist',
+    ADD: `/wishlist/add`,
+    REMOVE: `/wishlist/remove`,
+    CLEAR: '/wishlist'
   },
 };
 
@@ -43,4 +49,4 @@ export const STORAGE_KEYS = {
   TOKEN: 'token',
   USER: 'user',
   CART: 'cart',
-}; 
+};

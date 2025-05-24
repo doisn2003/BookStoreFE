@@ -1,9 +1,24 @@
 import React, { useState } from 'react';
 import './Navbar.scss';
 import bookLogo from '@assets/book-logo.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const navigate = useNavigate();
+
+    const handleSearch = () => {
+        if (searchQuery.trim()) {
+            navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+        }
+    };
+
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
 
     return (
         <nav className="bookstore-navbar">
@@ -17,8 +32,14 @@ const Navbar: React.FC = () => {
 
                 <div className="navbar-center">
                     <div className="search-bar">
-                        <input type="text" placeholder="Search for books, authors, or genres..." />
-                        <button className="search-button">
+                        <input
+                            type="text"
+                            placeholder="Search for books, authors, or genres..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={handleKeyPress}
+                        />
+                        <button className="search-button" onClick={handleSearch}>
                             <span>🔍</span>
                         </button>
                     </div>
@@ -42,7 +63,7 @@ const Navbar: React.FC = () => {
                             <span className="action-icon">👤</span>
                         </a>
                     </div>
-                    <button 
+                    <button
                         className={`mobile-menu-button ${isMenuOpen ? 'open' : ''}`}
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
@@ -65,4 +86,4 @@ const Navbar: React.FC = () => {
     );
 };
 
-export default Navbar; 
+export default Navbar;
