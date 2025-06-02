@@ -1,0 +1,213 @@
+.orders-management {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+
+  .admin-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+
+      h1 {
+        color: #2c3e50;
+        margin: 0;
+      }
+
+      .back-button {
+        padding: 0.75rem 1.5rem;
+        background-color: #4299e1;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #3182ce;
+          transform: translateY(-1px);
+        }
+      }
+    }
+
+    .error-message {
+      background-color: #fed7d7;
+      color: #c53030;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .revenue-summary {
+      background-color: #4299e1;
+      color: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      h2 {
+        margin: 0;
+        font-size: 1.5rem;
+      }
+    }
+
+    .orders-table {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      overflow-x: auto;
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th, td {
+          padding: 1rem;
+          text-align: left;
+          border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+          background-color: #f7fafc;
+          font-weight: 600;
+          color: #4a5568;
+        }
+
+        .status-badge {
+          display: inline-block;
+          padding: 0.25rem 0.75rem;
+          border-radius: 20px;
+          color: white;
+          font-size: 0.875rem;
+          font-weight: 500;
+        }
+
+        .action-buttons {
+          display: flex;
+          gap: 0.5rem;
+
+          button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+
+            &.view-button {
+              background-color: #4299e1;
+              color: white;
+
+              &:hover {
+                background-color: #3182ce;
+              }
+            }
+
+            &.refund-button {
+              background-color: #f56565;
+              color: white;
+
+              &:hover {
+                background-color: #e53e3e;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+
+      .modal-content {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow-y: auto;
+
+        h2 {
+          color: #2c3e50;
+          margin-bottom: 1.5rem;
+        }
+
+        .order-details {
+          .detail-group {
+            margin-bottom: 2rem;
+
+            h3 {
+              color: #4a5568;
+              margin-bottom: 1rem;
+              font-size: 1.1rem;
+            }
+
+            p {
+              margin: 0.5rem 0;
+              color: #2d3748;
+            }
+          }
+
+          .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+
+            th, td {
+              padding: 0.75rem;
+              text-align: left;
+              border-bottom: 1px solid #e2e8f0;
+            }
+
+            th {
+              background-color: #f7fafc;
+              font-weight: 600;
+              color: #4a5568;
+            }
+
+            tfoot {
+              font-weight: 600;
+            }
+          }
+        }
+
+        .modal-buttons {
+          margin-top: 2rem;
+          text-align: right;
+
+          .close-button {
+            padding: 0.75rem 1.5rem;
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background-color: #3182ce;
+            }
+          }
+        }
+      }
+    }
+  }
+} 

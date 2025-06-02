@@ -36,22 +36,38 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div className="login-container">
-            <div className="login-content">
-                <div className="login-left">
-                    <img
-                        src="/src/assets/book-logo.jpg"
-                        alt="LOGO"
-                        className="facebook-logo"
-                    />
-                    <h2>BookStore is the best place to read and share your favorite books.</h2>
-                </div>
+        <div className="login-page">
+            <div className="login-container">
+                <div className="login-content">
+                    <div className="login-left">
+                        <img
+                            src="/src/assets/book-logo.jpg"
+                            alt="LOGO"
+                            className="facebook-logo"
+                        />
+                        <h2>BookStore is the best place to read and share your favorite books.</h2>
+                    </div>
 
-                <div className="login-right">
-                    <LoginForm
-                        onSubmit={handleSubmit}
-                        onCreateAccount={handleCreateAccount}
-                    />
+                    <div className="login-right">
+                        <LoginForm
+                            onSubmit={handleSubmit}
+                            onCreateAccount={handleCreateAccount}
+                        />
+                        <div className="login-options">
+                            <button 
+                                className="admin-login-button"
+                                onClick={() => navigate('/admin/login')}
+                            >
+                                Login as Admin
+                            </button>
+                            <button 
+                                className="register-button"
+                                onClick={() => navigate('/register')}
+                            >
+                                Register
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

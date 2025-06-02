@@ -11,6 +11,11 @@ import Wishlist from '@/pages/Wishlist/Wishlist';
 import Cart from '@/pages/Cart/Cart';
 import Account from '@/pages/Account/Account';
 import BookDetail from '@/pages/BookDetail/BookDetail';
+import PaymentPage from '@/pages/Payment/Payment';
+import Admin from '@/pages/Admin/Admin';
+import AddBook from '@/pages/Admin/AddBook';
+import OrdersManagement from '@/pages/Admin/OrdersManagement';
+import AdminLogin from '@/pages/Admin/AdminLogin';
 
 const App: React.FC = () => {
   return (
@@ -27,6 +32,11 @@ const App: React.FC = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/account" element={<Account />} />
         <Route path="/book/:id" element={<BookDetail />} />
+        <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/add-book" element={<AddBook />} />
+        <Route path="/admin/orders" element={<OrdersManagement />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
       </Routes>
     </BrowserRouter>
   );

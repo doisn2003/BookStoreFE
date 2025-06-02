@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar/Navbar';
 import BookSlider from '@/components/BookSlider/BookSlider';
 import BookQuickView from '@/components/BookQuickView/BookQuickView';
 import BookReviews from '@/components/BookReviews/BookReviews';
+import Footer from '@/components/Footer/Footer';
 
 // Import data from JSON files
 import featuredBooks from '@/data/featuredBooks.json';
@@ -57,7 +58,7 @@ const Home: React.FC = () => {
     };
 
     return (
-        <div className='home-container'>
+        <div className="home-page">
             <Navbar />
             <main className="home">
                 {/* Hero Section */}
@@ -99,17 +100,7 @@ const Home: React.FC = () => {
                     />
                 </section>
 
-                {/* Newsletter Section */}
-                <section className="newsletter-section">
-                    <div className="newsletter-content">
-                        <h2>Subscribe to Our Newsletter</h2>
-                        <p>Get updates on new releases, special offers, and more!</p>
-                        <form className="newsletter-form">
-                            <input type="email" placeholder="Enter your email" />
-                            <button type="submit">Subscribe</button>
-                        </form>
-                    </div>
-                </section>
+
 
                 {/* Quick View Modal */}
                 {selectedBook && (
@@ -122,6 +113,7 @@ const Home: React.FC = () => {
                     />
                 )}
             </main>
+            <Footer />
         </div>
     );
 };

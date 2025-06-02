@@ -199,7 +199,12 @@ const Cart: React.FC = () => {
                             <span>Total</span>
                             <span>${total.toFixed(2)}</span>
                         </div>
-                        <button className="checkout-button">Proceed to Checkout</button>
+                        <button 
+                            className="checkout-button"
+                            onClick={() => navigate('/payment')}
+                        >
+                            Proceed to Checkout
+                        </button>
                         <button
                             className="continue-shopping-button"
                             onClick={() => navigate('/home')}
