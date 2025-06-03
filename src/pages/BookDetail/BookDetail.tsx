@@ -1,10 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Rating, Chip, Snackbar, Alert } from '@mui/material';
+import { Rating, Chip, Snackbar, Alert, Tooltip } from '@mui/material';
 import BookReviews from '@/components/BookReviews/BookReviews';
-import { mockBooks, Book } from '@/data/mockBooks';
 import './BookDetail.scss';
 import Navbar from '@/components/Navbar/Navbar';
+
+// Import all book data
+import featuredBooks from '@/data/featuredBooks.json';
+import bestSellers from '@/data/bestSellers.json';
+import newReleases from '@/data/newReleases.json';
+import mockReviews from '@/data/mockReviews.json';
+import categories from '@/data/categories.json';
+import api from '@/services/api';
+import axios from 'axios';
+import { API_ENDPOINTS } from '@/constants';
+
+interface Book {
+    id: string;
+    title: string;
+    author: string;
+    price: number;
+    imageUrl: string;
+    rating: number;
+    discount?: number;
+    description: string;
+    category: string;
+    language: string;
+    pages: number;
+    publisher: string;
+    publishedDate: string;
+}
+
+interface Category {
+    id: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+}
 
 const BookDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -12,6 +44,7 @@ const BookDetail: React.FC = () => {
     const [quantity, setQuantity] = useState(1);
     const [book, setBook] = useState<Book | null>(null);
     const [relatedBooks, setRelatedBooks] = useState<Book[]>([]);
+    const [bookCategory, setBookCategory] = useState<Category | null>(null);
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',
@@ -19,40 +52,130 @@ const BookDetail: React.FC = () => {
     });
 
     useEffect(() => {
-        // In a real app, this would be an API call
-        const foundBook = mockBooks.find(b => b.id === id);
+        // Combine all books data
+        const allBooks = [...featuredBooks, ...bestSellers, ...newReleases];
+        
+        // Find the book by id
+        const foundBook = allBooks.find(b => b.id === id);
         if (foundBook) {
             setBook(foundBook);
-            // Find related books based on category and tags
-            const related = mockBooks
-                .filter(b => b.id !== id && 
-                    (b.category === foundBook.category || 
-                     b.tags.some(tag => foundBook.tags.includes(tag))))
+            // Find related books based on category
+            const related = allBooks
+                .filter(b => b.id !== id && b.category === foundBook.category)
                 .slice(0, 4);
             setRelatedBooks(related);
+
+            // Find category details
+            const categoryDetails = categories.find(c => c.name === foundBook.category);
+            if (categoryDetails) {
+                setBookCategory(categoryDetails);
+            }
         }
     }, [id]);
 
-    const handleAddToCart = () => {
-        // In a real app, this would call an API
-        setSnackbar({
-            open: true,
-            message: `${quantity} ${quantity === 1 ? 'copy' : 'copies'} of "${book?.title}" added to cart`,
-            severity: 'success'
-        });
+    interface ApiError {
+        response?: {
+            data?: {
+                message?: string;
+            };
+        };
+        message: string;
+    }
+
+    const handleAddToCart = async () => {
+        try {
+            // Add debug logging to see what's happening
+            console.log('Adding to cart with data:', { bookId: id, quantity });
+            
+            // Check if API_ENDPOINTS.CART.ADD has the correct path
+            console.log('Using endpoint:', API_ENDPOINTS.CART.ADD);
+            
+            // Make sure we're using the correct property name 'bookId'
+            // The server expects a bookId parameter as seen in cart.routes.ts
+            const response = await api.post(API_ENDPOINTS.CART.ADD, {
+                bookId: id,
+                quantity: quantity
+            });
+            
+            console.log('Cart response:', response);
+            
+            setSnackbar({
+                open: true,
+                message: `${quantity} ${quantity === 1 ? 'copy' : 'copies'} of "${book?.title}" added to cart`,
+                severity: 'success'
+            });
+        } catch (err: any) {
+            const error = err as ApiError;
+            // More detailed error logging
+            console.error('Error adding to cart:', error);
+            console.error('Error response data:', error.response?.data);
+            
+            const errorMessage = error.response?.data?.message || 'Error adding to cart';
+            setSnackbar({
+                open: true,
+                message: errorMessage,
+                severity: 'error'
+            });
+        }
     };
 
-    const handleAddToWishlist = () => {
-        // In a real app, this would call an API
-        setSnackbar({
-            open: true,
-            message: `"${book?.title}" added to wishlist`,
-            severity: 'success'
-        });
+    const handleAddToWishlist = async () => {
+        try {
+            // Add debug logging to see what's happening
+            console.log('Adding to Wishlist with data:', { bookId: id, quantity });
+            
+            // Check if API_ENDPOINTS.CART.ADD has the correct path
+            console.log('Using endpoint:', API_ENDPOINTS.WISHLIST.ADD);
+            
+            // Make sure we're using the correct property name 'bookId'
+            // The server expects a bookId parameter as seen in cart.routes.ts
+            const response = await api.post(API_ENDPOINTS.WISHLIST.ADD, {
+                bookId: id,
+                quantity: quantity
+            });
+            
+            console.log('Wishlist response:', response);
+            
+            setSnackbar({
+                open: true,
+                message: `${quantity} ${quantity === 1 ? 'copy' : 'copies'} of "${book?.title}" added to cart`,
+                severity: 'success'
+            });
+        } catch (err: any) {
+            const error = err as ApiError;
+            // More detailed error logging
+            console.error('Error adding to wishlist:', error);
+            console.error('Error response data:', error.response?.data);
+            
+            const errorMessage = error.response?.data?.message || 'Error adding to wishlist';
+            setSnackbar({
+                open: true,
+                message: errorMessage,
+                severity: 'error'
+            });
+        }
+    };
+
+    const handleAddToWishlist2 = async () => {
+        try {
+            await axios.post(API_ENDPOINTS.WISHLIST.ADD(book.id));
+            setSnackbar({
+                open: true,
+                message: `"${book?.title}" added to wishlist`,
+                severity: 'success'
+            });
+        } catch (error) {
+            console.error('Error adding to wishlist:', error);
+            setSnackbar({
+                open: true,
+                message: 'Failed to add to wishlist',
+                severity: 'error'
+            });
+        }
     };
 
     const handleQuantityChange = (newQuantity: number) => {
-        if (book && newQuantity >= 1 && newQuantity <= book.stock) {
+        if (newQuantity >= 1) {
             setQuantity(newQuantity);
         }
     };
@@ -80,16 +203,18 @@ const BookDetail: React.FC = () => {
                             <Rating value={book.rating} precision={0.5} readOnly />
                             <span className="rating-value">{book.rating}</span>
                         </div>
-                        <div className="tags">
-                            {book.tags.map(tag => (
-                                <Chip
-                                    key={tag}
-                                    label={tag}
-                                    size="small"
-                                    className="tag-chip"
-                                />
-                            ))}
-                        </div>
+                        {bookCategory && (
+                            <Tooltip title={bookCategory.description}>
+                                <div className="category">
+                                    <Chip
+                                        label={bookCategory.name}
+                                        size="small"
+                                        className="category-chip"
+                                        onClick={() => navigate(`/category/${bookCategory.id}`)}
+                                    />
+                                </div>
+                            </Tooltip>
+                        )}
                         <div className="price">
                             {book.discount ? (
                                 <>
@@ -103,13 +228,6 @@ const BookDetail: React.FC = () => {
                                 <span className="current-price">${book.price.toFixed(2)}</span>
                             )}
                         </div>
-                        <div className="stock-info">
-                            {book.stock > 0 ? (
-                                <span className="in-stock">In Stock ({book.stock} available)</span>
-                            ) : (
-                                <span className="out-of-stock">Out of Stock</span>
-                            )}
-                        </div>
                         <div className="quantity-selector">
                             <button
                                 onClick={() => handleQuantityChange(quantity - 1)}
@@ -120,7 +238,6 @@ const BookDetail: React.FC = () => {
                             <span>{quantity}</span>
                             <button
                                 onClick={() => handleQuantityChange(quantity + 1)}
-                                disabled={quantity >= book.stock}
                             >
                                 +
                             </button>
@@ -129,7 +246,6 @@ const BookDetail: React.FC = () => {
                             <button 
                                 className="add-to-cart" 
                                 onClick={handleAddToCart}
-                                disabled={book.stock === 0}
                             >
                                 Add to Cart
                             </button>
@@ -159,22 +275,12 @@ const BookDetail: React.FC = () => {
                             <span className="label">Language:</span>
                             <span className="value">{book.language}</span>
                         </div>
-                        <div className="detail-item">
-                            <span className="label">ISBN:</span>
-                            <span className="value">{book.isbn}</span>
-                        </div>
-                        <div className="detail-item">
-                            <span className="label">Format:</span>
-                            <span className="value">{book.format}</span>
-                        </div>
-                        <div className="detail-item">
-                            <span className="label">Dimensions:</span>
-                            <span className="value">{book.dimensions}</span>
-                        </div>
-                        <div className="detail-item">
-                            <span className="label">Weight:</span>
-                            <span className="value">{book.weight}</span>
-                        </div>
+                        {bookCategory && (
+                            <div className="detail-item">
+                                <span className="label">Category:</span>
+                                <span className="value">{bookCategory.name}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -184,7 +290,13 @@ const BookDetail: React.FC = () => {
                 </div>
 
                 <div className="book-reviews">
-                    <BookReviews bookId={id || ''} reviews={book.reviews} />
+                    <BookReviews 
+                        reviews={mockReviews}
+                        onAddReview={(review) => {
+                            console.log('New review:', review);
+                            // Implement review submission logic here
+                        }}
+                    />
                 </div>
 
                 {relatedBooks.length > 0 && (
@@ -244,4 +356,4 @@ const BookDetail: React.FC = () => {
     );
 };
 
-export default BookDetail; 
+export default BookDetail;

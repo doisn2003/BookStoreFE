@@ -14,7 +14,7 @@ const signupSchema = z.object({
     password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
-type SignupFormData = z.infer<typeof signupSchema>;
+export type SignupFormData = z.infer<typeof signupSchema>;
 
 interface SignupFormProps {
     onSubmit: (data: SignupFormData) => void;

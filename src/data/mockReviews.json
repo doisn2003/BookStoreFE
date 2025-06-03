@@ -1,0 +1,20 @@
+[
+    {
+        "id": "1",
+        "userId": "user1",
+        "userName": "John Doe",
+        "userAvatar": "https://i.pravatar.cc/150?img=1",
+        "rating": 5,
+        "comment": "Great book! I couldn't put it down.",
+        "date": "2024-03-15"
+    },
+    {
+        "id": "2",
+        "userId": "user2",
+        "userName": "Jane Smith",
+        "userAvatar": "https://i.pravatar.cc/150?img=2",
+        "rating": 4,
+        "comment": "Very well written and engaging.",
+        "date": "2024-03-14"
+    }
+] 

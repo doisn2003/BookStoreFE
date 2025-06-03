@@ -5,6 +5,7 @@
     overflow: hidden;
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
+    margin-bottom: 40px;
 
     &:hover {
         transform: translateY(-5px);
@@ -13,7 +14,8 @@
 
     .book-image {
         position: relative;
-        padding-top: 140%;
+        height: 400px;
+        width: 100%;
 
         img {
             position: absolute;

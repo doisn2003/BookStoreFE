@@ -1,55 +1,125 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Cart.scss';
 import Navbar from '@/components/Navbar/Navbar';
+import api from '@/services/api';
+import { API_ENDPOINTS } from '@/constants';
 
-// Mock cart data
-const cartItems = [
-    {
-        id: '1',
-        title: 'The Great Gatsby',
-        author: 'F. Scott Fitzgerald',
-        price: 19.99,
-        imageUrl: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500',
-        quantity: 1,
-        discount: 20,
-    },
-    {
-        id: '2',
-        title: 'To Kill a Mockingbird',
-        author: 'Harper Lee',
-        price: 15.99,
-        imageUrl: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500',
-        quantity: 2,
-    },
-    // Add more cart items...
-];
+interface CartItem {
+    _id: string;
+    book: {
+        _id: string;
+        title: string;
+        author: string;
+        price: number;
+        imageUrl: string;
+        discount?: number;
+        stock: number;
+    };
+    quantity: number;
+}
+
+interface Cart {
+    _id: string;
+    items: CartItem[];
+    totalAmount: number;
+}
 
 const Cart: React.FC = () => {
     const navigate = useNavigate();
+    const [cart, setCart] = useState<Cart | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
-    const handleQuantityChange = (bookId: string, newQuantity: number) => {
-        console.log('Quantity changed:', bookId, newQuantity);
-        // Implement quantity change logic here
+    useEffect(() => {
+        fetchCart();
+    }, []);
+
+    interface ApiError {
+        response?: {
+            data?: {
+                message?: string;
+            };
+        };
+        message: string;
+    }
+
+    const fetchCart = async () => {
+        try {
+            const response = await api.get(API_ENDPOINTS.CART.LIST);
+            setCart(response.data);
+            setError('');
+        } catch (err: ApiError) {
+            setError(err.response?.data?.message || 'Error loading cart');
+            console.error('Error fetching cart:', err);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleRemoveItem = (bookId: string) => {
-        console.log('Removed item:', bookId);
-        // Implement remove item logic here
+    const handleQuantityChange = async (itemId: string, newQuantity: number) => {
+        try {
+            await api.put(API_ENDPOINTS.CART.UPDATE, { itemId, quantity: newQuantity });
+            await fetchCart(); // Refresh cart data
+            setError('');
+        } catch (err: ApiError) {
+            setError(err.response?.data?.message || 'Error updating quantity');
+            console.error('Error updating quantity:', err);
+        }
+    };
+
+    const handleRemoveItem = async (itemId: string) => {
+        try {
+            await api.delete(`${API_ENDPOINTS.CART.REMOVE}/${itemId}`);
+            await fetchCart(); // Refresh cart data
+            setError('');
+        } catch (err: ApiError) {
+            setError(err.response?.data?.message || 'Error removing item');
+            console.error('Error removing item:', err);
+        }
     };
 
     const calculateSubtotal = () => {
-        return cartItems.reduce((total, item) => {
-            const itemPrice = item.discount
-                ? item.price * (1 - item.discount / 100)
-                : item.price;
+        if (!cart?.items) return 0;
+    
+        return cart.items.reduce((total, item) => {
+            if (!item.book) return total; // Bỏ qua item nếu book null
+    
+            const itemPrice = item.book.discount
+                ? item.book.price * (1 - item.book.discount / 100)
+                : item.book.price;
+    
             return total + itemPrice * item.quantity;
         }, 0);
     };
+    
 
     const subtotal = calculateSubtotal();
     const shipping = 5.99;
     const total = subtotal + shipping;
+
+    if (loading) {
+        return (
+            <div className="cart-page">
+                <Navbar />
+                <div className="cart-header">
+                    <h1>Loading cart...</h1>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="cart-page">
+                <Navbar />
+                <div className="cart-header">
+                    <h1>Error</h1>
+                    <p>{error}</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="cart-page">
@@ -59,54 +129,55 @@ const Cart: React.FC = () => {
                 <p>Review your items and proceed to checkout</p>
             </div>
 
-            {cartItems.length > 0 ? (
+            {cart?.items.length ? (
                 <div className="cart-content">
                     <div className="cart-items">
-                        {cartItems.map(item => (
-                            <div key={item.id} className="cart-item">
+                        {cart.items.map(item => (
+                            <div key={item._id} className="cart-item">
                                 <div className="item-image">
-                                    <img src={item.imageUrl} alt={item.title} />
+                                    <img src={item.book.imageUrl || 'https://via.placeholder.com/150'} alt={item.book.title} />
                                 </div>
                                 <div className="item-details">
-                                    <h3>{item.title}</h3>
-                                    <p className="author">by {item.author}</p>
+                                    <h3>{item.book.title}</h3>
+                                    <p className="author">by {item.book.author}</p>
                                     <div className="price">
-                                        {item.discount ? (
+                                        {item.book.discount ? (
                                             <>
                                                 <span className="original-price">
-                                                    ${item.price.toFixed(2)}
+                                                    ${item.book.price.toFixed(2)}
                                                 </span>
                                                 <span className="discounted-price">
-                                                    ${(item.price * (1 - item.discount / 100)).toFixed(2)}
+                                                    ${(item.book.price * (1 - item.book.discount / 100)).toFixed(2)}
                                                 </span>
                                             </>
                                         ) : (
                                             <span className="current-price">
-                                                ${item.price.toFixed(2)}
+                                                ${item.book.price.toFixed(2)}
                                             </span>
                                         )}
                                     </div>
                                 </div>
                                 <div className="item-quantity">
                                     <button
-                                        onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                                        onClick={() => handleQuantityChange(item._id, item.quantity - 1)}
                                         disabled={item.quantity <= 1}
                                     >
                                         -
                                     </button>
                                     <span>{item.quantity}</span>
                                     <button
-                                        onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                                        onClick={() => handleQuantityChange(item._id, item.quantity + 1)}
+                                        disabled={item.quantity >= item.book.stock}
                                     >
                                         +
                                     </button>
                                 </div>
                                 <div className="item-total">
-                                    ${((item.discount ? item.price * (1 - item.discount / 100) : item.price) * item.quantity).toFixed(2)}
+                                    ${((item.book.discount ? item.book.price * (1 - item.book.discount / 100) : item.book.price) * item.quantity).toFixed(2)}
                                 </div>
                                 <button
                                     className="remove-button"
-                                    onClick={() => handleRemoveItem(item.id)}
+                                    onClick={() => handleRemoveItem(item._id)}
                                 >
                                     Remove
                                 </button>
@@ -128,10 +199,15 @@ const Cart: React.FC = () => {
                             <span>Total</span>
                             <span>${total.toFixed(2)}</span>
                         </div>
-                        <button className="checkout-button">Proceed to Checkout</button>
+                        <button 
+                            className="checkout-button"
+                            onClick={() => navigate('/payment')}
+                        >
+                            Proceed to Checkout
+                        </button>
                         <button
                             className="continue-shopping-button"
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate('/home')}
                         >
                             Continue Shopping
                         </button>
@@ -142,9 +218,9 @@ const Cart: React.FC = () => {
                     <p>Your cart is empty</p>
                     <button
                         className="browse-books-button"
-                        onClick={() => navigate('/')}
+                        onClick={() => navigate('/home')}
                     >
-                        Browse Books
+                        See more books
                     </button>
                 </div>
             )}
@@ -152,4 +228,4 @@ const Cart: React.FC = () => {
     );
 };
 
-export default Cart; 
+export default Cart;
